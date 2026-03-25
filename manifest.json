@@ -16,7 +16,6 @@
       "command": "node",
       "args": ["${__dirname}/dist/index.js"],
       "env": {
-        "PLANNER_MCP_CLIENT_ID": "${user_config.client_id}",
         "PLANNER_MCP_TENANT_ID": "${user_config.tenant_id}"
       }
     }
@@ -28,13 +27,6 @@
     }
   },
   "user_config": {
-    "client_id": {
-      "type": "string",
-      "title": "Azure AD Client ID",
-      "description": "The Application (client) ID from your Azure AD app registration. Required for authenticating with Microsoft Graph API.",
-      "required": true,
-      "sensitive": false
-    },
     "tenant_id": {
       "type": "string",
       "title": "Azure AD Tenant ID",

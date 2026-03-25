@@ -49,10 +49,7 @@ class AuthManager {
   }
 
   static create(): AuthManager {
-    const clientId = process.env.PLANNER_MCP_CLIENT_ID;
-    if (!clientId) {
-      throw new Error('PLANNER_MCP_CLIENT_ID environment variable is required');
-    }
+    const clientId = process.env.PLANNER_MCP_CLIENT_ID || '73f9e2f2-f857-4083-9b90-751ce15b5e83';
     const tenantId = process.env.PLANNER_MCP_TENANT_ID || 'common';
     const config: Configuration = {
       auth: {
