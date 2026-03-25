@@ -1,0 +1,7 @@
+node_modules/
+dist/
+logs/
+.env
+.token-cache.json
+.selected-account.json
+*.tsbuildinfo
