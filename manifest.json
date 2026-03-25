@@ -15,25 +15,13 @@
     "mcp_config": {
       "command": "node",
       "args": ["${__dirname}/dist/index.js"],
-      "env": {
-        "PLANNER_MCP_TENANT_ID": "${user_config.tenant_id}"
-      }
+      "env": {}
     }
   },
   "compatibility": {
     "platforms": ["darwin", "win32", "linux"],
     "runtimes": {
       "node": ">=18.0.0"
-    }
-  },
-  "user_config": {
-    "tenant_id": {
-      "type": "string",
-      "title": "Azure AD Tenant ID",
-      "description": "Your Azure AD tenant ID, or 'common' for multi-tenant. Defaults to 'common' if left empty.",
-      "required": false,
-      "sensitive": false,
-      "default": "common"
     }
   },
   "tools": [
