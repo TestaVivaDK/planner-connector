@@ -1,6 +1,6 @@
 {
   "name": "plannner-connector",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server for Microsoft Planner via Graph API",
   "type": "module",
   "main": "dist/index.js",

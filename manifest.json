@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "plannner-connector",
   "display_name": "Microsoft Planner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Connect Claude to Microsoft Planner — manage plans, buckets, tasks, assignments, and checklists via the Graph API.",
   "long_description": "Full CRUD access to Microsoft Planner through the Graph API. Create and manage plans, organize work with buckets, create and assign tasks, track progress, and manage checklists. Authenticates via Microsoft device code flow.",
   "author": {
