@@ -126,17 +126,31 @@ class AuthManager {
   }
 
   async acquireTokenByDeviceCode(
-    callback?: (message: string) => void
+    callback?: (info: { message: string; userCode: string; verificationUri: string }) => void
   ): Promise<string | null> {
     const response = await this.msalApp.acquireTokenByDeviceCode({
       scopes: this.scopes,
       deviceCodeCallback: (resp) => {
-        const text = `\n${resp.message}\n`;
         if (callback) {
-          callback(text);
+          callback({
+            message: resp.message,
+            userCode: resp.userCode,
+            verificationUri: resp.verificationUri,
+          });
         } else {
-          console.log(text);
+          console.log(`\n${resp.message}\n`);
         }
+
+        // Auto-open browser to the verification URL
+        const url = resp.verificationUri;
+        import('child_process').then(({ exec }) => {
+          const platform = process.platform;
+          const cmd = platform === 'darwin' ? 'open' :
+                      platform === 'win32' ? 'start' : 'xdg-open';
+          exec(`${cmd} "${url}"`, (err) => {
+            if (err) logger.info(`Could not auto-open browser: ${err.message}`);
+          });
+        });
       },
     });
     this.accessToken = response?.accessToken || null;
