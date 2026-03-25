@@ -1,0 +1,65 @@
+[
+  {
+    "pathPattern": "/me/planner/plans",
+    "method": "get",
+    "toolName": "list-my-plans",
+    "scopes": ["Tasks.ReadWrite"],
+    "llmTip": "Returns all Planner plans the authenticated user is a member of."
+  },
+  {
+    "pathPattern": "/planner/plans/{plan-id}",
+    "method": "get",
+    "toolName": "get-plan",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/planner/plans/{plan-id}/buckets",
+    "method": "get",
+    "toolName": "list-buckets",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/planner/buckets/{bucket-id}",
+    "method": "get",
+    "toolName": "get-bucket",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/planner/plans/{plan-id}/tasks",
+    "method": "get",
+    "toolName": "list-plan-tasks",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/planner/buckets/{bucket-id}/tasks",
+    "method": "get",
+    "toolName": "list-bucket-tasks",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/planner/tasks/{task-id}",
+    "method": "get",
+    "toolName": "get-task",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/planner/tasks/{task-id}/details",
+    "method": "get",
+    "toolName": "get-task-details",
+    "scopes": ["Tasks.ReadWrite"]
+  },
+  {
+    "pathPattern": "/groups",
+    "method": "get",
+    "toolName": "list-groups",
+    "scopes": ["Group.Read.All"],
+    "headers": { "ConsistencyLevel": "eventual" },
+    "llmTip": "Use $filter=groupTypes/any(g:g eq 'Unified') to find M365 groups that can have Planner plans. Use $search=\"displayName:keyword\" and remember to set ConsistencyLevel:eventual (handled automatically)."
+  },
+  {
+    "pathPattern": "/groups/{group-id}/planner/plans",
+    "method": "get",
+    "toolName": "list-group-plans",
+    "scopes": ["Tasks.ReadWrite", "Group.Read.All"]
+  }
+]
