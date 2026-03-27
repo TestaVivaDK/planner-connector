@@ -5,3 +5,4 @@ logs/
 .token-cache.json
 .selected-account.json
 *.tsbuildinfo
+*.mcpb

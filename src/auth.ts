@@ -49,8 +49,14 @@ class AuthManager {
   }
 
   static create(): AuthManager {
-    const clientId = process.env.PLANNER_MCP_CLIENT_ID || '73f9e2f2-f857-4083-9b90-751ce15b5e83';
-    const tenantId = process.env.PLANNER_MCP_TENANT_ID || 'd4ebe44b-4256-4f0d-b490-fd95cd0e9a92';
+    const clientId = process.env.PLANNER_MCP_CLIENT_ID;
+    const tenantId = process.env.PLANNER_MCP_TENANT_ID;
+    if (!clientId || !tenantId) {
+      throw new Error(
+        'Missing required environment variables: PLANNER_MCP_CLIENT_ID and PLANNER_MCP_TENANT_ID. ' +
+        'Set these to your Azure AD app registration values.'
+      );
+    }
     const config: Configuration = {
       auth: {
         clientId,
@@ -141,14 +147,29 @@ class AuthManager {
           console.log(`\n${resp.message}\n`);
         }
 
-        // Auto-open browser to the verification URL
+        // Auto-open browser to the verification URL (detached so no terminal flashes)
         const url = resp.verificationUri;
-        import('child_process').then(({ exec }) => {
+        import('child_process').then(({ spawn }) => {
           const platform = process.platform;
-          const cmd = platform === 'darwin' ? 'open' :
-                      platform === 'win32' ? 'start' : 'xdg-open';
-          exec(`${cmd} "${url}"`, (err) => {
-            if (err) logger.info(`Could not auto-open browser: ${err.message}`);
+          let cmd: string;
+          let args: string[];
+          if (platform === 'darwin') {
+            cmd = 'open';
+            args = [url];
+          } else if (platform === 'win32') {
+            cmd = 'cmd';
+            args = ['/c', 'start', '', url];
+          } else {
+            cmd = 'xdg-open';
+            args = [url];
+          }
+          const child = spawn(cmd, args, {
+            detached: true,
+            stdio: 'ignore',
+          });
+          child.unref();
+          child.on('error', (err) => {
+            logger.info(`Could not auto-open browser: ${err.message}`);
           });
         });
       },

@@ -2,11 +2,11 @@
   "manifest_version": "0.3",
   "name": "plannner-connector",
   "display_name": "Microsoft Planner",
-  "version": "0.3.0",
+  "version": "0.8.0",
   "description": "Connect Claude to Microsoft Planner — manage plans, buckets, tasks, assignments, and checklists via the Graph API.",
   "long_description": "Full CRUD access to Microsoft Planner through the Graph API. Create and manage plans, organize work with buckets, create and assign tasks, track progress, and manage checklists. Authenticates via Microsoft device code flow.",
   "author": {
-    "name": "plannner-connector"
+    "name": "TestaViva"
   },
   "license": "MIT",
   "server": {
@@ -15,7 +15,10 @@
     "mcp_config": {
       "command": "node",
       "args": ["${__dirname}/dist/index.js"],
-      "env": {}
+      "env": {
+        "PLANNER_MCP_CLIENT_ID": "${PLANNER_MCP_CLIENT_ID}",
+        "PLANNER_MCP_TENANT_ID": "${PLANNER_MCP_TENANT_ID}"
+      }
     }
   },
   "compatibility": {
