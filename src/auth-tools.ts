@@ -1,12 +1,11 @@
 import { z } from 'zod';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import AuthManager from './auth.js';
-import logger from './logger.js';
 
 export function registerAuthTools(server: McpServer, authManager: AuthManager): void {
   server.tool(
     'planner-login',
-    'Authenticate with Microsoft. Opens the browser, shows the device code, and waits for the user to complete sign-in.',
+    'Authenticate with Microsoft. Opens the browser for sign-in and waits for completion.',
     {
       force: z.boolean().default(false).describe('Force a new login even if already logged in'),
     },
@@ -21,25 +20,15 @@ export function registerAuthTools(server: McpServer, authManager: AuthManager): 
           }
         }
 
-        // Start device code flow. The browser opens automatically.
-        // Send the device code to the client as a log notification so the
-        // user sees it while we block waiting for sign-in to complete.
-        let deviceInfo: { userCode: string; verificationUri: string } | undefined;
-        const token = await authManager.acquireTokenByDeviceCode((info) => {
-          deviceInfo = { userCode: info.userCode, verificationUri: info.verificationUri };
-          logger.info(`Device code: ${info.userCode} — browser opened to ${info.verificationUri}`);
-          server.sendLoggingMessage({
-            level: 'warning',
-            data: `🔑 Enter this code in the browser: ${info.userCode}\n\nA browser window should have opened to ${info.verificationUri}.\nIf not, open that URL manually and enter the code above.`,
-          }).catch(() => {});
-        });
+        // Opens the browser for Microsoft sign-in. MSAL handles the
+        // localhost redirect automatically — no device codes needed.
+        const token = await authManager.acquireTokenInteractively();
 
         if (token) {
           const status = await authManager.testLogin();
           return {
             content: [{ type: 'text', text: JSON.stringify({
               status: 'Login successful',
-              ...(deviceInfo ? { userCode: deviceInfo.userCode, verificationUri: deviceInfo.verificationUri } : {}),
               ...status,
             }) }],
           };
@@ -47,9 +36,8 @@ export function registerAuthTools(server: McpServer, authManager: AuthManager): 
 
         return {
           content: [{ type: 'text', text: JSON.stringify({
-            status: 'Login failed — the user may not have completed sign-in in time.',
-            ...(deviceInfo ? { userCode: deviceInfo.userCode, verificationUri: deviceInfo.verificationUri } : {}),
-            hint: 'Call planner-login again to get a new device code.',
+            status: 'Login failed — the user may not have completed sign-in.',
+            hint: 'Call planner-login again to retry.',
           }) }],
           isError: true,
         };

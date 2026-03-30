@@ -12,7 +12,7 @@ async function main(): Promise<void> {
   await authManager.loadTokenCache();
 
   if (args.login) {
-    await authManager.acquireTokenByDeviceCode();
+    await authManager.acquireTokenInteractively();
     logger.info('Login completed, testing connection...');
     const result = await authManager.testLogin();
     console.log(JSON.stringify(result));
