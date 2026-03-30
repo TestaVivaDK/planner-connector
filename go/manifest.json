@@ -2,16 +2,18 @@
   "manifest_version": "0.3",
   "name": "plannner-connector",
   "display_name": "Microsoft Planner",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Connect Claude to Microsoft Planner — manage plans, buckets, tasks, assignments, and checklists via the Graph API.",
   "long_description": "Full CRUD access to Microsoft Planner through the Graph API. Create and manage plans, organize work with buckets, create and assign tasks, track progress, and manage checklists. Authenticates via interactive browser login.",
-  "author": { "name": "TestaViva" },
+  "author": {
+    "name": "TestaViva"
+  },
   "license": "MIT",
   "server": {
     "type": "binary",
     "entry_point": "server/plannner-connector",
     "mcp_config": {
-      "command": "server/plannner-connector",
+      "command": "${__dirname}/server/plannner-connector",
       "args": [],
       "env": {
         "PLANNER_MCP_CLIENT_ID": "${user_config.client_id}",
@@ -19,10 +21,10 @@
       },
       "platform_overrides": {
         "win32": {
-          "command": "server/plannner-connector.exe"
+          "command": "${__dirname}/server/plannner-connector.exe"
         },
         "darwin": {
-          "command": "server/plannner-connector-darwin"
+          "command": "${__dirname}/server/plannner-connector-darwin"
         }
       }
     }
@@ -42,36 +44,128 @@
     }
   },
   "compatibility": {
-    "platforms": ["darwin", "win32", "linux"]
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ]
   },
   "tools": [
-    { "name": "planner-login", "description": "Authenticate with Microsoft (opens browser)" },
-    { "name": "planner-logout", "description": "Log out from Microsoft" },
-    { "name": "planner-auth-status", "description": "Check authentication status" },
-    { "name": "list-my-plans", "description": "List all Planner plans you are a member of" },
-    { "name": "get-plan", "description": "Get details of a specific plan" },
-    { "name": "create-plan", "description": "Create a new Planner plan" },
-    { "name": "update-plan", "description": "Update plan title or categories" },
-    { "name": "delete-plan", "description": "Delete a plan" },
-    { "name": "list-buckets", "description": "List buckets in a plan" },
-    { "name": "create-bucket", "description": "Create a new bucket" },
-    { "name": "update-bucket", "description": "Update a bucket" },
-    { "name": "delete-bucket", "description": "Delete a bucket" },
-    { "name": "list-plan-tasks", "description": "List tasks in a plan" },
-    { "name": "list-bucket-tasks", "description": "List tasks in a bucket" },
-    { "name": "get-task", "description": "Get details of a task" },
-    { "name": "create-task", "description": "Create a new task" },
-    { "name": "update-task", "description": "Update a task" },
-    { "name": "delete-task", "description": "Delete a task" },
-    { "name": "assign-task", "description": "Assign a user to a task" },
-    { "name": "unassign-task", "description": "Remove a user from a task" },
-    { "name": "move-task", "description": "Move a task to a different bucket" },
-    { "name": "get-task-details", "description": "Get task description and checklist" },
-    { "name": "update-task-details", "description": "Update task description, checklist, or references" },
-    { "name": "add-checklist-item", "description": "Add a checklist item to a task" },
-    { "name": "toggle-checklist-item", "description": "Toggle a checklist item's checked state" },
-    { "name": "list-groups", "description": "List Microsoft 365 groups" },
-    { "name": "list-group-plans", "description": "List plans in a group" }
+    {
+      "name": "planner-login",
+      "description": "Authenticate with Microsoft (opens browser)"
+    },
+    {
+      "name": "planner-logout",
+      "description": "Log out from Microsoft"
+    },
+    {
+      "name": "planner-auth-status",
+      "description": "Check authentication status"
+    },
+    {
+      "name": "list-my-plans",
+      "description": "List all Planner plans you are a member of"
+    },
+    {
+      "name": "get-plan",
+      "description": "Get details of a specific plan"
+    },
+    {
+      "name": "create-plan",
+      "description": "Create a new Planner plan"
+    },
+    {
+      "name": "update-plan",
+      "description": "Update plan title or categories"
+    },
+    {
+      "name": "delete-plan",
+      "description": "Delete a plan"
+    },
+    {
+      "name": "list-buckets",
+      "description": "List buckets in a plan"
+    },
+    {
+      "name": "create-bucket",
+      "description": "Create a new bucket"
+    },
+    {
+      "name": "update-bucket",
+      "description": "Update a bucket"
+    },
+    {
+      "name": "delete-bucket",
+      "description": "Delete a bucket"
+    },
+    {
+      "name": "list-plan-tasks",
+      "description": "List tasks in a plan"
+    },
+    {
+      "name": "list-bucket-tasks",
+      "description": "List tasks in a bucket"
+    },
+    {
+      "name": "get-task",
+      "description": "Get details of a task"
+    },
+    {
+      "name": "create-task",
+      "description": "Create a new task"
+    },
+    {
+      "name": "update-task",
+      "description": "Update a task"
+    },
+    {
+      "name": "delete-task",
+      "description": "Delete a task"
+    },
+    {
+      "name": "assign-task",
+      "description": "Assign a user to a task"
+    },
+    {
+      "name": "unassign-task",
+      "description": "Remove a user from a task"
+    },
+    {
+      "name": "move-task",
+      "description": "Move a task to a different bucket"
+    },
+    {
+      "name": "get-task-details",
+      "description": "Get task description and checklist"
+    },
+    {
+      "name": "update-task-details",
+      "description": "Update task description, checklist, or references"
+    },
+    {
+      "name": "add-checklist-item",
+      "description": "Add a checklist item to a task"
+    },
+    {
+      "name": "toggle-checklist-item",
+      "description": "Toggle a checklist item's checked state"
+    },
+    {
+      "name": "list-groups",
+      "description": "List Microsoft 365 groups"
+    },
+    {
+      "name": "list-group-plans",
+      "description": "List plans in a group"
+    }
   ],
-  "keywords": ["microsoft", "planner", "tasks", "project-management", "graph-api", "office365"]
+  "keywords": [
+    "microsoft",
+    "planner",
+    "tasks",
+    "project-management",
+    "graph-api",
+    "office365"
+  ]
 }
