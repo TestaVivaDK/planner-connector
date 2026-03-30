@@ -8,9 +8,11 @@ GO_DIR := go
 build:
 	$(MAKE) -C $(GO_DIR) build
 
-## Build + package into .mcpb binary bundle
+## Build + package into .mcpb binary bundle (output at project root)
 package:
 	$(MAKE) -C $(GO_DIR) package
+	cp $(GO_DIR)/plannner-connector.mcpb .
+	@echo "Ready: plannner-connector.mcpb ($$(du -h plannner-connector.mcpb | cut -f1))"
 
 ## Run tests
 test:
@@ -28,3 +30,4 @@ bump-version:
 ## Remove build artifacts
 clean:
 	$(MAKE) -C $(GO_DIR) clean
+	rm -f plannner-connector.mcpb
