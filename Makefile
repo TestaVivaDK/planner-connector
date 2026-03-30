@@ -1,41 +1,30 @@
-NAME     := plannner-connector
-DIST     := dist
-MCPB     := $(NAME).mcpb
-TMPDIR   := $(shell mktemp -d)
+## Root Makefile — delegates to go/Makefile
 
-VERSION  ?= $(shell node -p "require('./manifest.json').version")
+GO_DIR := go
 
-.PHONY: build package clean version bump-version
+.PHONY: build package clean test version bump-version
 
-## Build TypeScript → dist/
+## Cross-compile Go binaries (linux/darwin/windows)
 build:
-	npm run build
+	$(MAKE) -C $(GO_DIR) build
 
-## Set version in manifest.json and package.json
-bump-version:
-	@test -n "$(V)" || (echo "Usage: make bump-version V=1.2.3" && exit 1)
-	node -e "\
-	  const fs = require('fs'); \
-	  for (const f of ['manifest.json','package.json']) { \
-	    const j = JSON.parse(fs.readFileSync(f,'utf8')); \
-	    j.version = '$(V)'; \
-	    fs.writeFileSync(f, JSON.stringify(j, null, 2) + '\n'); \
-	  }"
-	@echo "Version set to $(V)"
+## Build + package into .mcpb binary bundle
+package:
+	$(MAKE) -C $(GO_DIR) package
 
-## Build + package into .mcpb (production deps only)
-package: build
-	rm -f $(MCPB)
-	cp -r $(DIST) manifest.json package.json $(TMPDIR)/
-	cd $(TMPDIR) && npm install --omit=dev --ignore-scripts --no-audit --no-fund 2>&1
-	cd $(TMPDIR) && zip -r $(CURDIR)/$(MCPB) manifest.json package.json $(DIST)/ node_modules/
-	rm -rf $(TMPDIR)
-	@echo "Packaged $(MCPB) v$(VERSION) ($$(du -h $(MCPB) | cut -f1))"
+## Run tests
+test:
+	$(MAKE) -C $(GO_DIR) test
 
 ## Print current version
 version:
-	@echo $(VERSION)
+	$(MAKE) -C $(GO_DIR) version
+
+## Set version in manifest.json
+bump-version:
+	@test -n "$(V)" || (echo "Usage: make bump-version V=x.y.z" && exit 1)
+	$(MAKE) -C $(GO_DIR) bump-version V=$(V)
 
 ## Remove build artifacts
 clean:
-	rm -rf $(DIST) $(MCPB)
+	$(MAKE) -C $(GO_DIR) clean
