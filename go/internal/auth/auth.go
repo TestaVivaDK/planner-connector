@@ -196,7 +196,14 @@ func (am *AuthManager) refreshAccessToken() error {
 	return am.saveTokenCacheLocked()
 }
 
-// AcquireTokenInteractively runs the full PKCE authorization code flow.
+// AcquireTokenInteractively runs the full PKCE authorization code flow (public).
+func (am *AuthManager) AcquireTokenInteractively() error {
+	am.mu.Lock()
+	defer am.mu.Unlock()
+	return am.acquireTokenInteractively()
+}
+
+// acquireTokenInteractively runs the full PKCE authorization code flow.
 // Must be called with am.mu held.
 func (am *AuthManager) acquireTokenInteractively() error {
 	// 1. Generate PKCE codes.
